@@ -80,10 +80,10 @@ public struct ShowDetailView: View {
     @ViewBuilder
     private func showSummary(_ show: Show) -> some View {
         if let summary = show.summary {
-            Text(summary.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil))
-                .lineLimit(4)
-                .padding(.horizontal, 16)
-                .padding(.vertical, 4)
+            ExpandableSummaryView(
+                text: summary.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression),
+                previewLineLimit: 5
+            )
         }
     }
 
