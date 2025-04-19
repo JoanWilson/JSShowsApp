@@ -9,6 +9,7 @@ import Foundation
 import Domain
 import Data
 
+@MainActor
 public final class ShowDetailViewModel: ObservableObject {
 
     @Published private(set) var show: Show?
@@ -32,14 +33,12 @@ public final class ShowDetailViewModel: ObservableObject {
         self.useCase = useCase
     }
 
-    @MainActor
     public func loadData() async {
         await fetchShow()
         let firstSeason: Season? = await fetchSeasons()
         await fetchEpisodes(for: firstSeason)
     }
 
-    @MainActor
     public func fetchShow() async {
         isLoading = true
         error = nil
@@ -55,7 +54,6 @@ public final class ShowDetailViewModel: ObservableObject {
         isLoading = false
     }
 
-    @MainActor
     public func fetchSeasons() async -> Season? {
         isLoading = true
         error = nil
@@ -74,7 +72,6 @@ public final class ShowDetailViewModel: ObservableObject {
         return nil
     }
 
-    @MainActor
     public func fetchEpisodes(for season: Season? = nil) async {
         let seasonToUse = season ?? selectedSeason
         guard let selectedSeason = seasonToUse else { return }
@@ -93,7 +90,6 @@ public final class ShowDetailViewModel: ObservableObject {
         isLoading = false
     }
 
-    @MainActor
     public func selectSeason(season: Season) async {
         selectedSeason = season
         await fetchEpisodes()

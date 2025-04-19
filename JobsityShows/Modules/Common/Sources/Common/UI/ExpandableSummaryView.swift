@@ -51,7 +51,7 @@ public struct ExpandableSummaryView: View {
         .padding(.vertical, 8)
         .sheet(isPresented: $showFullScreen) {
             FullSummaryView(text: text)
-                .presentationDetents([.medium, .large])
+                .presentationDetents([.fraction(0.8), .large])
                 .presentationDragIndicator(.visible)
         }
     }

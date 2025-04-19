@@ -8,6 +8,8 @@
 import SwiftUI
 import Kingfisher
 import Domain
+import Common
+import EpisodeDetail
 
 public struct ShowDetailView: View {
     @StateObject private var viewModel: ShowDetailViewModel
@@ -17,24 +19,22 @@ public struct ShowDetailView: View {
     }
 
     public var body: some View {
-        ScrollView {
-            VStack(spacing: 0) {
-                if viewModel.isLoading && viewModel.show == nil {
-                    ProgressView("Loading...")
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                } else if let error = viewModel.error {
-                    ErrorView(error: error) {
-                        Task { await viewModel.loadData() }
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .padding()
-                } else if let show = viewModel.show {
-                    showContent(show: show)
-                } else {
-                    Text("No show data available")
-                        .foregroundColor(.secondary)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        VStack(spacing: 0) {
+            if viewModel.isLoading && viewModel.show == nil {
+                ProgressView("Loading...")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            } else if let error = viewModel.error {
+                ErrorView(error: error) {
+                    Task { await viewModel.loadData() }
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .padding()
+            } else if let show: Show = viewModel.show {
+                showContent(show: show)
+            } else {
+                Text("No show data available")
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
         .navigationTitle(viewModel.show?.name ?? "Show Details")
@@ -42,6 +42,8 @@ public struct ShowDetailView: View {
         .toolbarBackground(.visible, for: .navigationBar)
         .toolbarBackground(Color(.systemBackground), for: .navigationBar)
         .task { await viewModel.loadData() }
+
+
     }
 
     @ViewBuilder
@@ -155,8 +157,13 @@ public struct ShowDetailView: View {
                 .frame(maxWidth: .infinity)
         } else {
             ForEach(viewModel.episodes) { episode in
-                EpisodeView(episode: episode)
-                    .padding(.vertical, 4)
+                NavigationLink {
+                    EpisodeDetailView(viewModel: .init(episode: episode))
+                } label: {
+                    EpisodeView(episode: episode)
+                        .padding(.vertical, 4)
+                }
+                .buttonStyle(.plain)
             }
         }
     }

@@ -146,10 +146,22 @@ extension ShowsListViewController: UICollectionViewDelegate {
     }
 
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let show: Show = viewModel.getShow(for: indexPath.item)
+        navigateToDetail(show: viewModel.getShow(for: indexPath.item))
+    }
+
+    private func navigateToDetail(show: Show) {
         let viewModel: ShowDetailViewModel = ShowDetailViewModel(show: show)
         let hostingController: UIViewController = ShowDetailHostingController(viewModel: viewModel)
-        navigationController?.pushViewController(hostingController, animated: false)
+        UIView.transition(
+            with: navigationController!.view,
+            duration: 0.2,
+            options: .transitionCrossDissolve,
+            animations: {
+                self.navigationController?.pushViewController(hostingController,
+                                                              animated: false)
+            },
+            completion: nil
+        )
     }
 }
 

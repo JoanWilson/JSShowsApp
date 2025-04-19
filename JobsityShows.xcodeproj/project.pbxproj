@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8515143E2DB3243800A533C9 /* EpisodeDetail in Frameworks */ = {isa = PBXBuildFile; productRef = 8515143D2DB3243800A533C9 /* EpisodeDetail */; };
 		85DCCB372DB1873F009CFA49 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 85DCCB362DB1873F009CFA49 /* Kingfisher */; };
 		85DCCB9B2DB1C4FD009CFA49 /* Data in Frameworks */ = {isa = PBXBuildFile; productRef = 85DCCB9A2DB1C4FD009CFA49 /* Data */; };
 		85DCCB9D2DB1C4FD009CFA49 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 85DCCB9C2DB1C4FD009CFA49 /* Domain */; };
@@ -47,6 +48,7 @@
 				Modules/Common,
 				Modules/Data,
 				Modules/Domain,
+				Modules/EpisodeDetail,
 				Modules/Extensions,
 				Modules/Network,
 				Modules/ShowDetail,
@@ -83,6 +85,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				85DCCBA22DB1C6EC009CFA49 /* Extensions in Frameworks */,
+				8515143E2DB3243800A533C9 /* EpisodeDetail in Frameworks */,
 				85DCCB9D2DB1C4FD009CFA49 /* Domain in Frameworks */,
 				85DCCB9F2DB1C4FD009CFA49 /* Network in Frameworks */,
 				85DD5E1C2DB2984600B10C37 /* ShowDetail in Frameworks */,
@@ -164,6 +167,7 @@
 				85DCCBA12DB1C6EC009CFA49 /* Extensions */,
 				85DCCBA82DB1CB9B009CFA49 /* ShowsList */,
 				85DD5E1B2DB2984600B10C37 /* ShowDetail */,
+				8515143D2DB3243800A533C9 /* EpisodeDetail */,
 			);
 			productName = JobsityShows;
 			productReference = 852785252DB08A83002C5F87 /* JobsityShows.app */;
@@ -643,6 +647,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		8515143D2DB3243800A533C9 /* EpisodeDetail */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = EpisodeDetail;
+		};
 		85DCCB362DB1873F009CFA49 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 85DCCB342DB186C6009CFA49 /* XCRemoteSwiftPackageReference "Kingfisher" */;

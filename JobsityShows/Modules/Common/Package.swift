@@ -11,9 +11,15 @@ let package = Package(
             name: "Common",
             targets: ["Common"]),
     ],
+    dependencies: [
+        .package(name: "Extensions", path: "../Extensions"),
+    ],
     targets: [
         .target(
-            name: "Common"),
+            name: "Common",
+            dependencies: [
+                .product(name: "Extensions", package: "../Extensions")
+            ]),
         .testTarget(
             name: "CommonTests",
             dependencies: ["Common"]
