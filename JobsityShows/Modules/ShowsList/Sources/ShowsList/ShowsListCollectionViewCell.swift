@@ -73,7 +73,7 @@ extension ShowsListCollectionViewCell: ViewCoding {
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 1.3),
+            imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 1.4),
 
             nameLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4),
             nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 2),

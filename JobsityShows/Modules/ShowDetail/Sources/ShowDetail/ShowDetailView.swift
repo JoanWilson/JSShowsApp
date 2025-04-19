@@ -64,17 +64,24 @@ public struct ShowDetailView: View {
     @ViewBuilder
     private func showCover(_ show: Show) -> some View {
         if let imageUrl = show.image?.original {
+            let screenWidth = UIScreen.main.bounds.width
+            let targetHeight = screenWidth * (295 / 210)
             KFImage(URL(string: imageUrl))
                 .resizable()
                 .placeholder {
                     Color.gray.opacity(0.3)
                 }
-                .setProcessor(DownsamplingImageProcessor(size: CGSize(width: UIScreen.main.bounds.width, height: 450)))
+                .setProcessor(DownsamplingImageProcessor(
+                    size: CGSize(
+                        width: screenWidth * UIScreen.main.scale,
+                        height: targetHeight * UIScreen.main.scale
+                    )
+                ))
                 .scaleFactor(UIScreen.main.scale)
                 .cacheOriginalImage()
                 .fade(duration: 0.3)
                 .scaledToFill()
-                .frame(maxWidth: .infinity, maxHeight: 450)
+                .frame(maxWidth: screenWidth, maxHeight: targetHeight)
                 .clipped()
         }
     }
