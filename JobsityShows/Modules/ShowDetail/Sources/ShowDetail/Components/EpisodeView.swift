@@ -43,6 +43,7 @@ struct EpisodeView: View {
                         .lineLimit(2)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
+                        .multilineTextAlignment(.leading)
                 }
 
                 if let runtime = episode.runtime {
