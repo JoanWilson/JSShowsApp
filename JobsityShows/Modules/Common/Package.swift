@@ -18,7 +18,7 @@ let package = Package(
         .target(
             name: "Common",
             dependencies: [
-                .product(name: "Extensions", package: "../Extensions")
+                .product(name: "Extensions", package: "Extensions")
             ]),
         .testTarget(
             name: "CommonTests",
