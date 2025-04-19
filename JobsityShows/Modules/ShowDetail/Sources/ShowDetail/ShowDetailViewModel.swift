@@ -9,6 +9,12 @@ import Foundation
 import Domain
 import Data
 
+enum ShowDetailError: Error {
+    case showError
+    case seasonError
+    case episodesError
+}
+
 @MainActor
 public final class ShowDetailViewModel: ObservableObject {
 
@@ -17,7 +23,7 @@ public final class ShowDetailViewModel: ObservableObject {
     @Published private(set) var episodes: [Episode] = []
     @Published private(set) var selectedSeason: Season?
     @Published private(set) var isLoading = false
-    @Published private(set) var error: Error?
+    @Published private(set) var error: ShowDetailError?
 
     private let showId: Int
     private let useCase: ShowsUseCaseProtocol
@@ -47,7 +53,7 @@ public final class ShowDetailViewModel: ObservableObject {
             let fetchedShow: Show = try await useCase.fetchShowById(id: showId)
             show = fetchedShow
         } catch {
-            self.error = error
+            self.error = .showError
             print(error.localizedDescription)
         }
 
@@ -64,7 +70,7 @@ public final class ShowDetailViewModel: ObservableObject {
             selectedSeason = fetchedSeasons.first
             return fetchedSeasons.first
         } catch {
-            self.error = error
+            self.error = .seasonError
             print(error.localizedDescription)
         }
 
@@ -83,7 +89,7 @@ public final class ShowDetailViewModel: ObservableObject {
             let fetchedEpisodes: [Episode] = try await useCase.fetchEpisodes(seasonId: selectedSeason.id)
             episodes = fetchedEpisodes
         } catch {
-            self.error = error
+            self.error = .episodesError
             print(error.localizedDescription)
         }
 

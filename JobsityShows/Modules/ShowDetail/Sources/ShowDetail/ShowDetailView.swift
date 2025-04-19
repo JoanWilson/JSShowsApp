@@ -23,7 +23,7 @@ public struct ShowDetailView: View {
             if viewModel.isLoading && viewModel.show == nil {
                 ProgressView("Loading...")
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            } else if let error = viewModel.error {
+            } else if let error: ShowDetailError = viewModel.error, error == .showError {
                 ErrorView(error: error) {
                     Task { await viewModel.loadData() }
                 }
@@ -69,12 +69,12 @@ public struct ShowDetailView: View {
                 .placeholder {
                     Color.gray.opacity(0.3)
                 }
-                .setProcessor(DownsamplingImageProcessor(size: CGSize(width: UIScreen.main.bounds.width, height: 350)))
+                .setProcessor(DownsamplingImageProcessor(size: CGSize(width: UIScreen.main.bounds.width, height: 450)))
                 .scaleFactor(UIScreen.main.scale)
                 .cacheOriginalImage()
                 .fade(duration: 0.3)
                 .scaledToFill()
-                .frame(maxWidth: .infinity, maxHeight: 350)
+                .frame(maxWidth: .infinity, maxHeight: 450)
                 .clipped()
         }
     }
@@ -118,28 +118,33 @@ public struct ShowDetailView: View {
 
     @ViewBuilder
     private var seasonSelector: some View {
-        VStack {
-            Divider()
+        if let error: ShowDetailError = viewModel.error, error == .seasonError {
+            Text("Season 1")
+                .padding(.leading, 16)
+        } else {
+            VStack {
+                Divider()
 
-            HStack {
-                SeasonDropdown(
-                    selectedSeason: Binding(
-                        get: { viewModel.selectedSeason },
-                        set: { newSeason in
-                            if let season = newSeason {
-                                Task {
-                                    await viewModel.selectSeason(season: season)
+                HStack {
+                    SeasonDropdown(
+                        selectedSeason: Binding(
+                            get: { viewModel.selectedSeason },
+                            set: { newSeason in
+                                if let season = newSeason {
+                                    Task {
+                                        await viewModel.selectSeason(season: season)
+                                    }
                                 }
                             }
-                        }
-                    ),
-                    seasons: viewModel.seasons
-                )
-                Spacer()
-            }
-            .padding(.leading, 16)
+                        ),
+                        seasons: viewModel.seasons
+                    )
+                    Spacer()
+                }
+                .padding(.leading, 16)
 
-            Divider()
+                Divider()
+            }
         }
     }
 
@@ -149,7 +154,7 @@ public struct ShowDetailView: View {
             ProgressView("Loading episodes...")
                 .padding()
                 .frame(maxWidth: .infinity)
-        } else if viewModel.episodes.isEmpty {
+        } else if let error: ShowDetailError = viewModel.error, error == .episodesError {
             Text("No episodes available for this season")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
