@@ -10,6 +10,15 @@ import Common
 
 final class ShowsListView: UIView {
 
+    lazy var emptyLabel: UILabel = {
+        let label: UILabel = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "No shows avaiable"
+        label.isHidden = true
+
+        return label
+    }()
+
     lazy var searchBar: UISearchBar = {
         let searchBar: UISearchBar = .init()
         searchBar.placeholder = "Search for shows."
@@ -86,12 +95,13 @@ final class ShowsListView: UIView {
 extension ShowsListView: ViewCoding {
 
     func setupHierarchy() {
-        [showsCollectionView, loadingIndicatorView].forEach(addSubview)
+        [showsCollectionView, loadingIndicatorView, emptyLabel].forEach(addSubview)
     }
 
     func setupConstraints() {
         showsCollectionViewConstraints()
         loadingIndicatorViewConstraints()
+        emptyLabelConstraints()
     }
 
     private func showsCollectionViewConstraints() {
@@ -107,6 +117,13 @@ extension ShowsListView: ViewCoding {
         NSLayoutConstraint.activate([
             loadingIndicatorView.centerXAnchor.constraint(equalTo: centerXAnchor),
             loadingIndicatorView.centerYAnchor.constraint(equalTo: centerYAnchor)
+        ])
+    }
+
+    private func emptyLabelConstraints() {
+        NSLayoutConstraint.activate([
+            emptyLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            emptyLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
     }
 }

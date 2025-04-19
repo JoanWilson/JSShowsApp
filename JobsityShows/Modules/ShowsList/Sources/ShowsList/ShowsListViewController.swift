@@ -95,9 +95,10 @@ public final class ShowsListViewController: UIViewController, UISearchController
             .receive(on: DispatchQueue.main)
             .sink { [weak self] message in
                 guard let self: ShowsListViewController else { return }
-                if message != nil {
-                    self.viewModel.isFetching = false
-                }
+                let hasError = message != nil && viewModel.shows.isEmpty
+                contentView.showsCollectionView.isHidden = hasError
+                contentView.emptyLabel.isHidden = !hasError
+                viewModel.isFetching = false
             }
             .store(in: &cancellables)
     }
