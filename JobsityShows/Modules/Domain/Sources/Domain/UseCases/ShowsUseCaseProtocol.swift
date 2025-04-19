@@ -12,5 +12,6 @@ public protocol ShowsUseCaseProtocol: Sendable {
     func fetchShows(page: Int) async throws -> [Show]
     func searchShows(query: String) async throws -> [Show]
     func fetchSeasons(showId: Int) async throws -> [Season]
+    func fetchEpisodeById(episodeId: Int) async throws -> Episode
     func fetchEpisodes(seasonId: Int) async throws -> [Episode]
 }

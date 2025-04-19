@@ -14,6 +14,7 @@ public enum TVMazeEndpoint {
     case searchShows(query: String)
     case seasons(showId: Int)
     case episodes(seasonId: Int)
+    case episode(episodeId: Int)
 }
 
 extension TVMazeEndpoint: Endpoint {
@@ -25,6 +26,7 @@ extension TVMazeEndpoint: Endpoint {
         case .shows: return "/shows"
         case .searchShows: return "/search/shows"
         case .seasons(let showId): return "/shows/\(showId)/seasons"
+        case .episode(let episodeId): return "/episodes/\(episodeId)"
         case .episodes(let seasonId): return "/seasons/\(seasonId)/episodes"
         }
     }
@@ -37,7 +39,7 @@ extension TVMazeEndpoint: Endpoint {
             return [URLQueryItem(name: "page", value: "\(page)")]
         case .searchShows(let query):
             return [URLQueryItem(name: "q", value: query)]
-        case .seasons, .episodes, .show:
+        case .seasons, .episodes, .show, .episode:
             return nil
         }
     }

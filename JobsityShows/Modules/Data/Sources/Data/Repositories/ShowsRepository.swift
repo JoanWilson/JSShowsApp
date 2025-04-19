@@ -44,5 +44,11 @@ public final class ShowsRepository: ShowsUseCaseProtocol {
         let episodes: [EpisodeDTO] = try await client.request(endpoint)
         return episodes.map { $0.toDomain() }
     }
+
+    public func fetchEpisodeById(episodeId: Int) async throws -> Episode {
+        let endpoint = TVMazeEndpoint.episode(episodeId: episodeId)
+        let episode: EpisodeDTO = try await client.request(endpoint)
+        return episode.toDomain()
+    }
 }
 
