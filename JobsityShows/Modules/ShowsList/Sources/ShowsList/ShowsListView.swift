@@ -83,12 +83,13 @@ final class ShowsListView: UIView {
     }
 
     private func createFooter() -> NSCollectionLayoutBoundarySupplementaryItem {
-        let footerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                heightDimension: .absolute(50))
-        return NSCollectionLayoutBoundarySupplementaryItem(layoutSize: footerSize,
-                                                           elementKind: UICollectionView.elementKindSectionFooter,
-                                                           alignment: .bottom
-        )
+        let footerSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .absolute(50))
+        return NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: footerSize,
+            elementKind: UICollectionView.elementKindSectionFooter,
+            alignment: .bottom)
     }
 }
 
