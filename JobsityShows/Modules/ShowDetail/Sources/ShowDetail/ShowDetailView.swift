@@ -40,10 +40,7 @@ public struct ShowDetailView: View {
         .navigationTitle(viewModel.show?.name ?? "Show Details")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarBackground(Color(.systemBackground), for: .navigationBar)
         .task { await viewModel.loadData() }
-
-
     }
 
     @ViewBuilder
@@ -69,19 +66,15 @@ public struct ShowDetailView: View {
             KFImage(URL(string: imageUrl))
                 .resizable()
                 .placeholder {
-                    Color.gray.opacity(0.3)
+                    Color(.systemGray6)
+                        .frame(width: screenWidth, height: targetHeight)
                 }
                 .setProcessor(DownsamplingImageProcessor(
-                    size: CGSize(
-                        width: screenWidth * UIScreen.main.scale,
-                        height: targetHeight * UIScreen.main.scale
-                    )
+                    size: CGSize(width: screenWidth, height: targetHeight)
                 ))
-                .scaleFactor(UIScreen.main.scale)
-                .cacheOriginalImage()
                 .fade(duration: 0.3)
                 .scaledToFill()
-                .frame(maxWidth: screenWidth, maxHeight: targetHeight)
+                .frame(width: screenWidth, height: targetHeight)
                 .clipped()
         }
     }

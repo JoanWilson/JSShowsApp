@@ -20,6 +20,7 @@ final class ShowsListCollectionViewCell: UICollectionViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.backgroundColor = .systemGray6
+        imageView.layer.cornerRadius = 8
         return imageView
     }()
 

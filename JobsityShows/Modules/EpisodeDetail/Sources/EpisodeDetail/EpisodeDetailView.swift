@@ -33,7 +33,6 @@ public struct EpisodeDetailView: View {
         .navigationTitle("Episode Details")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarBackground(Color(.systemBackground), for: .navigationBar)
         .task { await viewModel.loadData() }
     }
 
@@ -70,14 +69,19 @@ public struct EpisodeDetailView: View {
 
     @ViewBuilder
     private func episodeHeaderImage(_ episode: Episode) -> some View {
+        let screenWidth = UIScreen.main.bounds.width
+            let headerHeight: CGFloat = 200
         if let imageUrl = episode.image?.original {
             KFImage(URL(string: imageUrl))
                 .resizable()
-                .scaleFactor(UIScreen.main.scale)
-                .cacheOriginalImage()
+                .setProcessor(DownsamplingImageProcessor(size: CGSize(width: screenWidth, height: headerHeight)))
+                .placeholder {
+                    Color(.systemGray6)
+                        .frame(width: screenWidth, height: headerHeight)
+                }
                 .fade(duration: 0.3)
                 .scaledToFill()
-                .frame(maxWidth: .infinity, maxHeight: 350)
+                .frame(width: screenWidth, height: headerHeight)
                 .clipped()
         }
     }
