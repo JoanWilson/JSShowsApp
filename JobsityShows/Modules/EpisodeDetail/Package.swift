@@ -15,7 +15,8 @@ let package = Package(
         .package(name: "Domain", path: "../Domain"),
         .package(name: "Data", path: "../Data"),
         .package(name: "Extensions", path: "../Extensions"),
-        .package(name: "Common", path: "../Common")
+        .package(name: "Common", path: "../Common"),
+        .package(url: "https://github.com/onevcat/Kingfisher.git", .upToNextMajor(from: "8.0.0"))
     ],
     targets: [
         .target(
@@ -24,7 +25,8 @@ let package = Package(
                 .product(name: "Domain", package: "Domain"),
                 .product(name: "Data", package: "Data"),
                 .product(name: "Extensions", package: "Extensions"),
-                .product(name: "Common", package: "Common")
+                .product(name: "Common", package: "Common"),
+                .product(name: "Kingfisher", package: "Kingfisher")
             ]),
         .testTarget(
             name: "EpisodeDetailTests",
