@@ -1,5 +1,7 @@
 # JSShowsApp
 
+Project created for a job application at Jobsity
+
 JSShowsApp is an iOS application that helps users discover and explore TV shows. The app provides a clean and intuitive interface for browsing popular shows, searching for specific titles, and viewing detailed information about each show.
 
 ## Features
