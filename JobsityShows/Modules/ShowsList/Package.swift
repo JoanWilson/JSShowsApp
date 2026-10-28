@@ -18,7 +18,8 @@ let package = Package(
         .package(name: "Extensions", path: "../Extensions"),
         .package(name: "Common", path: "../Common"),
         .package(name: "Tracking", path: "../Tracking"),
-        .package(name: "ShowDetail", path: "../ShowDetail")
+        .package(name: "ShowDetail", path: "../ShowDetail"),
+        .package(name: "Reachability", path: "../Reachability")
     ],
     targets: [
         .target(
@@ -29,7 +30,8 @@ let package = Package(
                 .product(name: "Extensions", package: "Extensions"),
                 .product(name: "Common", package: "Common"),
                 .product(name: "Tracking", package: "Tracking"),
-                .product(name: "ShowDetail", package: "ShowDetail")
+                .product(name: "ShowDetail", package: "ShowDetail"),
+                .product(name: "Reachability", package: "Reachability")
             ],
             resources: [.process("Resources")]),
         .testTarget(
@@ -37,7 +39,8 @@ let package = Package(
             dependencies: [
                 "ShowsList",
                 .product(name: "Domain", package: "Domain"),
-                .product(name: "Tracking", package: "Tracking")
+                .product(name: "Tracking", package: "Tracking"),
+                .product(name: "Reachability", package: "Reachability")
             ]
         ),
     ]

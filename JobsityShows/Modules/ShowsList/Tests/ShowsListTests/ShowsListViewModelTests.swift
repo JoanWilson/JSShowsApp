@@ -8,6 +8,7 @@
 import XCTest
 import Domain
 import Tracking
+import Reachability
 @testable import ShowsList
 
 @MainActor
@@ -210,8 +211,84 @@ final class ShowsListViewModelTests: XCTestCase {
         XCTAssertEqual(tracker.events, [.selectShow(id: 7, name: "Dome", fromSearch: true)])
     }
 
-    private func makeSUT(tracker: TrackerSpy = TrackerSpy()) -> (sut: ShowsListViewModel, useCase: ShowsUseCaseStub) {
+    func test_startMonitoringConnection_startsMonitor() {
+        let monitor = ConnectionMonitorStub()
+        let (sut, _) = makeSUT(monitor: monitor)
+
+        sut.startMonitoringConnection()
+
+        XCTAssertEqual(monitor.startCount, 1)
+    }
+
+    func test_connectionLost_setsOfflineAndTracks() {
+        let tracker = TrackerSpy()
+        let monitor = ConnectionMonitorStub()
+        let (sut, _) = makeSUT(tracker: tracker, monitor: monitor)
+        sut.startMonitoringConnection()
+
+        monitor.send(.disconnected)
+
+        XCTAssertTrue(sut.isOffline)
+        XCTAssertEqual(tracker.events, [.connectionChanged(isConnected: false)])
+    }
+
+    func test_connectedFromUnknown_staysOnlineWithoutTracking() {
+        let tracker = TrackerSpy()
+        let monitor = ConnectionMonitorStub()
+        let (sut, _) = makeSUT(tracker: tracker, monitor: monitor)
+        sut.startMonitoringConnection()
+
+        monitor.send(.connected)
+
+        XCTAssertFalse(sut.isOffline)
+        XCTAssertTrue(tracker.events.isEmpty)
+    }
+
+    func test_connectionRestored_afterFailedLoad_refetchesFirstPage() async {
+        let tracker = TrackerSpy()
+        let monitor = ConnectionMonitorStub()
+        let (sut, useCase) = makeSUT(tracker: tracker, monitor: monitor)
+        useCase.fetchShowsHandler = { _ in throw StubError.failure }
+        await sut.fetchShows(page: 1)
+        sut.startMonitoringConnection()
+        monitor.send(.disconnected)
+
+        let refetched = expectation(description: "refetch")
+        useCase.fetchShowsHandler = { _ in
+            refetched.fulfill()
+            return [.fixture(id: 1)]
+        }
+        monitor.send(.connected)
+        await fulfillment(of: [refetched], timeout: 1)
+        await Task.yield()
+
+        XCTAssertFalse(sut.isOffline)
+        XCTAssertEqual(useCase.requestedPages, [1, 1])
+        XCTAssertEqual(sut.shows.map(\.id), [1])
+        XCTAssertEqual(tracker.events.last, .connectionChanged(isConnected: true))
+    }
+
+    func test_connectionRestored_withShowsLoaded_doesNotRefetch() async {
+        let monitor = ConnectionMonitorStub()
+        let (sut, useCase) = makeSUT(monitor: monitor)
+        useCase.fetchShowsHandler = { _ in [.fixture(id: 1)] }
+        await sut.fetchShows(page: 1)
+        sut.startMonitoringConnection()
+
+        monitor.send(.disconnected)
+        monitor.send(.connected)
+        await Task.yield()
+
+        XCTAssertFalse(sut.isOffline)
+        XCTAssertEqual(useCase.requestedPages, [1])
+    }
+
+    private func makeSUT(
+        tracker: TrackerSpy = TrackerSpy(),
+        monitor: ConnectionMonitorStub = ConnectionMonitorStub()
+    ) -> (sut: ShowsListViewModel, useCase: ShowsUseCaseStub) {
         let useCase = ShowsUseCaseStub()
-        return (ShowsListViewModel(useCase: useCase, tracker: tracker), useCase)
+        let sut = ShowsListViewModel(useCase: useCase, tracker: tracker, connectionMonitor: monitor)
+        return (sut, useCase)
     }
 }

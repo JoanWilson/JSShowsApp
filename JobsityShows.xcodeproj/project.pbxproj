@@ -45,6 +45,7 @@
 				Modules/Extensions,
 				Modules/FirebaseTracking,
 				Modules/Networking,
+				Modules/Reachability,
 				Modules/ShowDetail,
 				Modules/ShowsList,
 				Modules/Tracking,

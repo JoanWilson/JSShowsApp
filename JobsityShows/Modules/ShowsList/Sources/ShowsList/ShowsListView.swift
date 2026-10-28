@@ -19,6 +19,19 @@ final class ShowsListView: UIView {
         return label
     }()
 
+    lazy var offlineBanner: UILabel = {
+        let label: UILabel = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = String(localized: "No internet connection", bundle: .module)
+        label.font = .preferredFont(forTextStyle: .footnote)
+        label.textColor = .white
+        label.textAlignment = .center
+        label.backgroundColor = .systemRed
+        label.accessibilityIdentifier = "offline_banner"
+        label.isHidden = true
+        return label
+    }()
+
     lazy var searchBar: UISearchBar = {
         let searchBar: UISearchBar = .init()
         searchBar.placeholder = "Search for shows."
@@ -96,13 +109,14 @@ final class ShowsListView: UIView {
 extension ShowsListView: ViewCoding {
 
     func setupHierarchy() {
-        [showsCollectionView, loadingIndicatorView, emptyLabel].forEach(addSubview)
+        [showsCollectionView, loadingIndicatorView, emptyLabel, offlineBanner].forEach(addSubview)
     }
 
     func setupConstraints() {
         showsCollectionViewConstraints()
         loadingIndicatorViewConstraints()
         emptyLabelConstraints()
+        offlineBannerConstraints()
     }
 
     private func showsCollectionViewConstraints() {
@@ -125,6 +139,15 @@ extension ShowsListView: ViewCoding {
         NSLayoutConstraint.activate([
             emptyLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
             emptyLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
+        ])
+    }
+
+    private func offlineBannerConstraints() {
+        NSLayoutConstraint.activate([
+            offlineBanner.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            offlineBanner.leadingAnchor.constraint(equalTo: leadingAnchor),
+            offlineBanner.trailingAnchor.constraint(equalTo: trailingAnchor),
+            offlineBanner.heightAnchor.constraint(equalToConstant: 28)
         ])
     }
 }
