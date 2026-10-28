@@ -7,6 +7,7 @@
 
 import XCTest
 import Domain
+import Tracking
 @testable import ShowDetail
 
 @MainActor
@@ -139,8 +140,59 @@ final class ShowDetailViewModelTests: XCTestCase {
         XCTAssertEqual(sut.getFormattedSummary(), "")
     }
 
-    private func makeSUT(showId: Int) -> (sut: ShowDetailViewModel, useCase: ShowsUseCaseStub) {
+    func test_trackScreenView_tracksShowDetailWithShowId() {
+        let tracker = TrackerSpy()
+        let (sut, _) = makeSUT(showId: 1, tracker: tracker)
+
+        sut.trackScreenView()
+
+        XCTAssertEqual(tracker.events, [.screenView(.showDetail, itemId: 1)])
+    }
+
+    func test_loadData_whenShowFailsWithoutInitialShow_tracksLoadFailed() async {
+        let tracker = TrackerSpy()
+        let (sut, useCase) = makeSUT(showId: 1, tracker: tracker)
+        useCase.fetchShowByIdResult = .failure(StubError.failure)
+
+        await sut.loadData()
+
+        XCTAssertEqual(tracker.events, [.loadFailed(.showDetail)])
+    }
+
+    func test_loadData_whenShowRefreshFailsWithInitialShow_doesNotTrackLoadFailed() async {
+        let tracker = TrackerSpy()
         let useCase = ShowsUseCaseStub()
-        return (ShowDetailViewModel(showId: showId, useCase: useCase), useCase)
+        let sut = ShowDetailViewModel(show: .fixture(id: 1), useCase: useCase, tracker: tracker)
+        useCase.fetchShowByIdResult = .failure(StubError.failure)
+
+        await sut.loadData()
+
+        XCTAssertTrue(tracker.events.isEmpty)
+    }
+
+    func test_selectSeason_tracksSeasonSelection() async {
+        let tracker = TrackerSpy()
+        let (sut, _) = makeSUT(showId: 1, tracker: tracker)
+
+        await sut.selectSeason(season: .fixture(id: 11, number: 2))
+
+        XCTAssertEqual(tracker.events, [.selectSeason(showId: 1, season: 2)])
+    }
+
+    func test_retry_tracksRetryAndReloadsShow() async {
+        let tracker = TrackerSpy()
+        let (sut, useCase) = makeSUT(showId: 1, tracker: tracker)
+        useCase.fetchShowByIdResult = .success(.fixture(id: 1))
+
+        await sut.retry()
+
+        XCTAssertEqual(tracker.events, [.retry(.showDetail)])
+        XCTAssertEqual(useCase.requestedShowIds, [1])
+        XCTAssertEqual(sut.show?.id, 1)
+    }
+
+    private func makeSUT(showId: Int, tracker: TrackerSpy = TrackerSpy()) -> (sut: ShowDetailViewModel, useCase: ShowsUseCaseStub) {
+        let useCase = ShowsUseCaseStub()
+        return (ShowDetailViewModel(showId: showId, useCase: useCase, tracker: tracker), useCase)
     }
 }

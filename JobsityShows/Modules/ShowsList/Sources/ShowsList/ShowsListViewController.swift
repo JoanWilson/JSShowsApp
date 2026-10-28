@@ -49,6 +49,11 @@ public final class ShowsListViewController: UIViewController, UISearchController
         loadInitialShows()
     }
 
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        viewModel.trackScreenView()
+    }
+
     private func loadInitialShows() {
         Task {
             await viewModel.fetchShows(page: viewModel.currentPage)
@@ -147,7 +152,7 @@ extension ShowsListViewController: UICollectionViewDelegate {
     }
 
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        navigateToDetail(show: viewModel.getShow(for: indexPath.item))
+        navigateToDetail(show: viewModel.selectShow(at: indexPath.item))
     }
 
     private func navigateToDetail(show: Show) {
@@ -182,5 +187,10 @@ extension ShowsListViewController: UISearchResultsUpdating {
 extension ShowsListViewController: UISearchBarDelegate {
     public func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         clearSearchings()
+    }
+
+    public func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let text: String = searchBar.text, !text.isEmpty else { return }
+        viewModel.trackSearch(term: text)
     }
 }

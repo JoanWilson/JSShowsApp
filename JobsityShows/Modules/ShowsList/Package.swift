@@ -16,6 +16,7 @@ let package = Package(
         .package(name: "Data", path: "../Data"),
         .package(name: "Extensions", path: "../Extensions"),
         .package(name: "Common", path: "../Common"),
+        .package(name: "Tracking", path: "../Tracking"),
         .package(name: "ShowDetail", path: "../ShowDetail")
     ],
     targets: [
@@ -26,13 +27,15 @@ let package = Package(
                 .product(name: "Data", package: "Data"),
                 .product(name: "Extensions", package: "Extensions"),
                 .product(name: "Common", package: "Common"),
+                .product(name: "Tracking", package: "Tracking"),
                 .product(name: "ShowDetail", package: "ShowDetail")
             ]),
         .testTarget(
             name: "ShowsListTests",
             dependencies: [
                 "ShowsList",
-                .product(name: "Domain", package: "Domain")
+                .product(name: "Domain", package: "Domain"),
+                .product(name: "Tracking", package: "Tracking")
             ]
         ),
     ]

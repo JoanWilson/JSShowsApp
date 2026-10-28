@@ -33,6 +33,7 @@ public struct EpisodeDetailView: View {
         .navigationTitle("Episode Details")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.visible, for: .navigationBar)
+        .onAppear { viewModel.trackScreenView() }
         .task { await viewModel.loadData() }
     }
 
@@ -43,7 +44,7 @@ public struct EpisodeDetailView: View {
 
     private func errorView(error: Error) -> some View {
         ErrorView(error: error) {
-            Task { await viewModel.loadData() }
+            Task { await viewModel.retry() }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding()

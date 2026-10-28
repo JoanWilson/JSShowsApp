@@ -8,6 +8,7 @@
 import Foundation
 import Domain
 import Data
+import Tracking
 
 enum ShowDetailError: Error {
     case showError
@@ -27,16 +28,19 @@ public final class ShowDetailViewModel: ObservableObject {
 
     private let showId: Int
     private let useCase: ShowsUseCaseProtocol
+    private let tracker: Tracker
 
-    public init(showId: Int, useCase: ShowsUseCaseProtocol = ShowsRepository()) {
+    public init(showId: Int, useCase: ShowsUseCaseProtocol = ShowsRepository(), tracker: Tracker = TrackerProvider.current) {
         self.showId = showId
         self.useCase = useCase
+        self.tracker = tracker
     }
 
-    public init(show: Show, useCase: ShowsUseCaseProtocol = ShowsRepository()) {
+    public init(show: Show, useCase: ShowsUseCaseProtocol = ShowsRepository(), tracker: Tracker = TrackerProvider.current) {
         self.show = show
         self.showId = show.id
         self.useCase = useCase
+        self.tracker = tracker
     }
 
     public func loadData() async {
@@ -56,6 +60,9 @@ public final class ShowDetailViewModel: ObservableObject {
         } catch {
             self.error = .showError
             print(error.localizedDescription)
+            if show == nil {
+                tracker.track(.loadFailed(.showDetail))
+            }
         }
 
         isLoading = false
@@ -99,7 +106,17 @@ public final class ShowDetailViewModel: ObservableObject {
 
     public func selectSeason(season: Season) async {
         selectedSeason = season
+        tracker.track(.selectSeason(showId: showId, season: season.number))
         await fetchEpisodes()
+    }
+
+    public func retry() async {
+        tracker.track(.retry(.showDetail))
+        await loadData()
+    }
+
+    public func trackScreenView() {
+        tracker.track(.screenView(.showDetail, itemId: showId))
     }
 
     func getFormattedSummary() -> String {
