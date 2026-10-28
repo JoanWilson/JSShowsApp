@@ -7,7 +7,7 @@
 
 import Foundation
 import Domain
-import Network
+import Networking
 
 public final class ShowsRepository: ShowsUseCaseProtocol {
 
