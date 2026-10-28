@@ -30,7 +30,10 @@ let package = Package(
             ]),
         .testTarget(
             name: "ShowsListTests",
-            dependencies: ["ShowsList"]
+            dependencies: [
+                "ShowsList",
+                .product(name: "Domain", package: "Domain")
+            ]
         ),
     ]
 )

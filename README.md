@@ -69,6 +69,20 @@ The project uses the following dependencies:
 - URLSession for networking
 - CoreData for data persistence
 
+## Tests
+
+Each module under `JobsityShows/Modules` has its own XCTest target.
+
+- `Extensions`, `Networking` and `Data` run on macOS:
+  ```bash
+  swift test --package-path JobsityShows/Modules/Data
+  ```
+- `ShowsList`, `ShowDetail` and `EpisodeDetail` import UIKit/SwiftUI, so they run on the iOS Simulator:
+  ```bash
+  cd JobsityShows/Modules/ShowsList
+  xcodebuild test -scheme ShowsList -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
+  ```
+
 ## Future Enhancements
 
 - Add user authentication
