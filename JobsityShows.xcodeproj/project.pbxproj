@@ -19,13 +19,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		8527853C2DB08A86002C5F87 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8527851D2DB08A83002C5F87 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 852785242DB08A83002C5F87;
-			remoteInfo = JobsityShows;
-		};
 		852785462DB08A86002C5F87 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8527851D2DB08A83002C5F87 /* Project object */;
@@ -37,7 +30,6 @@
 
 /* Begin PBXFileReference section */
 		852785252DB08A83002C5F87 /* JobsityShows.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JobsityShows.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		8527853B2DB08A86002C5F87 /* JobsityShowsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JobsityShowsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		852785452DB08A86002C5F87 /* JobsityShowsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JobsityShowsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -70,11 +62,6 @@
 			path = JobsityShows;
 			sourceTree = "<group>";
 		};
-		8527853E2DB08A86002C5F87 /* JobsityShowsTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = JobsityShowsTests;
-			sourceTree = "<group>";
-		};
 		852785482DB08A86002C5F87 /* JobsityShowsUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = JobsityShowsUITests;
@@ -99,13 +86,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		852785382DB08A86002C5F87 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		852785422DB08A86002C5F87 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -120,7 +100,6 @@
 			isa = PBXGroup;
 			children = (
 				852785272DB08A83002C5F87 /* JobsityShows */,
-				8527853E2DB08A86002C5F87 /* JobsityShowsTests */,
 				852785482DB08A86002C5F87 /* JobsityShowsUITests */,
 				85DCCB352DB1873F009CFA49 /* Frameworks */,
 				852785262DB08A83002C5F87 /* Products */,
@@ -131,7 +110,6 @@
 			isa = PBXGroup;
 			children = (
 				852785252DB08A83002C5F87 /* JobsityShows.app */,
-				8527853B2DB08A86002C5F87 /* JobsityShowsTests.xctest */,
 				852785452DB08A86002C5F87 /* JobsityShowsUITests.xctest */,
 			);
 			name = Products;
@@ -178,29 +156,6 @@
 			productReference = 852785252DB08A83002C5F87 /* JobsityShows.app */;
 			productType = "com.apple.product-type.application";
 		};
-		8527853A2DB08A86002C5F87 /* JobsityShowsTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 852785532DB08A86002C5F87 /* Build configuration list for PBXNativeTarget "JobsityShowsTests" */;
-			buildPhases = (
-				852785372DB08A86002C5F87 /* Sources */,
-				852785382DB08A86002C5F87 /* Frameworks */,
-				852785392DB08A86002C5F87 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				8527853D2DB08A86002C5F87 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				8527853E2DB08A86002C5F87 /* JobsityShowsTests */,
-			);
-			name = JobsityShowsTests;
-			packageProductDependencies = (
-			);
-			productName = JobsityShowsTests;
-			productReference = 8527853B2DB08A86002C5F87 /* JobsityShowsTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		852785442DB08A86002C5F87 /* JobsityShowsUITests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 852785562DB08A86002C5F87 /* Build configuration list for PBXNativeTarget "JobsityShowsUITests" */;
@@ -237,10 +192,6 @@
 					852785242DB08A83002C5F87 = {
 						CreatedOnToolsVersion = 16.3;
 					};
-					8527853A2DB08A86002C5F87 = {
-						CreatedOnToolsVersion = 16.3;
-						TestTargetID = 852785242DB08A83002C5F87;
-					};
 					852785442DB08A86002C5F87 = {
 						CreatedOnToolsVersion = 16.3;
 						TestTargetID = 852785242DB08A83002C5F87;
@@ -265,7 +216,6 @@
 			projectRoot = "";
 			targets = (
 				852785242DB08A83002C5F87 /* JobsityShows */,
-				8527853A2DB08A86002C5F87 /* JobsityShowsTests */,
 				852785442DB08A86002C5F87 /* JobsityShowsUITests */,
 			);
 		};
@@ -273,13 +223,6 @@
 
 /* Begin PBXResourcesBuildPhase section */
 		852785232DB08A83002C5F87 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		852785392DB08A86002C5F87 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -303,13 +246,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		852785372DB08A86002C5F87 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		852785412DB08A86002C5F87 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -320,11 +256,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		8527853D2DB08A86002C5F87 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 852785242DB08A83002C5F87 /* JobsityShows */;
-			targetProxy = 8527853C2DB08A86002C5F87 /* PBXContainerItemProxy */;
-		};
 		852785472DB08A86002C5F87 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 852785242DB08A83002C5F87 /* JobsityShows */;
@@ -518,44 +449,6 @@
 			};
 			name = Release;
 		};
-		852785542DB08A86002C5F87 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = GV65VCN69J;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.joanwilson.JobsityShowsTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JobsityShows.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/JobsityShows";
-			};
-			name = Debug;
-		};
-		852785552DB08A86002C5F87 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = GV65VCN69J;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.joanwilson.JobsityShowsTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JobsityShows.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/JobsityShows";
-			};
-			name = Release;
-		};
 		852785572DB08A86002C5F87 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -607,15 +500,6 @@
 			buildConfigurations = (
 				8527854F2DB08A86002C5F87 /* Debug */,
 				852785502DB08A86002C5F87 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		852785532DB08A86002C5F87 /* Build configuration list for PBXNativeTarget "JobsityShowsTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				852785542DB08A86002C5F87 /* Debug */,
-				852785552DB08A86002C5F87 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
