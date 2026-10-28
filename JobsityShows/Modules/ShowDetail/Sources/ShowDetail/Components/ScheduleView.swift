@@ -11,15 +11,7 @@ import SwiftUI
 struct ScheduleView: View {
     let schedule: Show.Schedule
 
-    private let dayInitials: [String: String] = [
-        "Monday": "S",
-        "Tuesday": "T",
-        "Wednesday": "Q",
-        "Thursday": "Q",
-        "Friday": "S",
-        "Saturday": "S",
-        "Sunday": "D"
-    ]
+    private let calendar: Calendar = .autoupdatingCurrent
 
     private let weekDaysOrder: [String] = [
         "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
@@ -27,13 +19,13 @@ struct ScheduleView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Schedule:")
+            Text("Schedule:", bundle: .module)
                 .font(.subheadline)
 
             HStack(spacing: 8) {
-                ForEach(weekDaysOrder, id: \.self) { day in
+                ForEach(Array(weekDaysOrder.enumerated()), id: \.offset) { index, day in
                     let isActive = schedule.days.contains(day)
-                    Text(dayInitials[day] ?? "")
+                    Text(calendar.veryShortStandaloneWeekdaySymbols[index])
                         .font(.caption)
                         .frame(width: 28, height: 28)
                         .background(isActive ? Color.accentColor : Color.gray.opacity(0.3))
@@ -43,11 +35,11 @@ struct ScheduleView: View {
                             Circle()
                                 .stroke(Color.gray.opacity(0.5), lineWidth: 1)
                         )
-                        .accessibilityLabel(Text(day))
+                        .accessibilityLabel(Text(calendar.standaloneWeekdaySymbols[index]))
                 }
             }
 
-            Text("Time: \(schedule.time)")
+            Text("Time: \(schedule.time)", bundle: .module)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
         }

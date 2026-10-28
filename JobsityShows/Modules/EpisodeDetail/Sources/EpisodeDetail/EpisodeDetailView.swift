@@ -30,7 +30,7 @@ public struct EpisodeDetailView: View {
                 emptyStateView
             }
         }
-        .navigationTitle("Episode Details")
+        .navigationTitle(Text("Episode Details", bundle: .module))
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.visible, for: .navigationBar)
         .onAppear { viewModel.trackScreenView() }
@@ -38,7 +38,7 @@ public struct EpisodeDetailView: View {
     }
 
     private var loadingView: some View {
-        ProgressView("Loading...")
+        ProgressView(String(localized: "Loading...", bundle: .module))
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
 
@@ -51,7 +51,7 @@ public struct EpisodeDetailView: View {
     }
 
     private var emptyStateView: some View {
-        Text("No episode data available")
+        Text("No episode data available", bundle: .module)
             .foregroundColor(.secondary)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -90,7 +90,7 @@ public struct EpisodeDetailView: View {
     @ViewBuilder
     private func episodeInfoSection(_ episode: Episode) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Season \(episode.season) • Episode \(episode.number)")
+            Text("Season \(episode.season) • Episode \(episode.number)", bundle: .module)
                 .font(.headline)
                 .foregroundColor(.secondary)
 
@@ -107,12 +107,12 @@ public struct EpisodeDetailView: View {
     private func episodeSummarySection(_ episode: Episode) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             if let summary: String = episode.summary, !summary.isEmpty {
-                Text("Summary")
+                Text("Summary", bundle: .module)
                     .font(.footnote)
                     .foregroundColor(.secondary)
                 Text(summary.removingHTMLTags())
             } else {
-                Text("No summary available for this episode.")
+                Text("No summary available for this episode.", bundle: .module)
                     .font(.subheadline)
                     .foregroundColor(.secondary)
             }
