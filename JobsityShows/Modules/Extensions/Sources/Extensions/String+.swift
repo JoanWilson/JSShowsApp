@@ -15,4 +15,9 @@ public extension String {
             options: .regularExpression
         )
     }
+
+    func usingHTTPS() -> String {
+        guard hasPrefix("http://") else { return self }
+        return "https://" + dropFirst("http://".count)
+    }
 }

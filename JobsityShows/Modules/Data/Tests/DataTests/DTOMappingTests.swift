@@ -34,6 +34,31 @@ final class DTOMappingTests: XCTestCase {
         XCTAssertNil(show.summary)
     }
 
+    func test_imageDTO_toDomain_upgradesHTTPURLsToHTTPS() {
+        let image = ShowDTO.ImageDTO(
+            medium: "http://static.tvmaze.com/uploads/images/medium_portrait/1/4600.jpg",
+            original: "http://static.tvmaze.com/uploads/images/original_untouched/1/4661.jpg"
+        ).toDomain()
+
+        XCTAssertEqual(image, Show.Image(
+            medium: "https://static.tvmaze.com/uploads/images/medium_portrait/1/4600.jpg",
+            original: "https://static.tvmaze.com/uploads/images/original_untouched/1/4661.jpg"
+        ))
+    }
+
+    func test_showDTO_toDomain_upgradesHTTPImageURLsToHTTPS() {
+        let show = ShowDTO(
+            id: 1,
+            name: "Under the Dome",
+            genres: [],
+            schedule: ShowDTO.ScheduleDTO(time: "", days: []),
+            image: ShowDTO.ImageDTO(medium: "http://static.tvmaze.com/m.jpg", original: "http://static.tvmaze.com/o.jpg"),
+            summary: nil
+        ).toDomain()
+
+        XCTAssertEqual(show.image, Show.Image(medium: "https://static.tvmaze.com/m.jpg", original: "https://static.tvmaze.com/o.jpg"))
+    }
+
     func test_searchResultsDTO_toDomain_mapsScoreAndShow() throws {
         let results = try TVMazeJSON.decode([SearchResultsDTO].self, from: TVMazeJSON.searchResults)
             .map { $0.toDomain() }
