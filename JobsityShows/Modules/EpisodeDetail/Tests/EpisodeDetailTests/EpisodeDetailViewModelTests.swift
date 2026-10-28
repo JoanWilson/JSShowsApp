@@ -7,6 +7,7 @@
 
 import XCTest
 import Domain
+import Tracking
 @testable import EpisodeDetail
 
 @MainActor
@@ -57,6 +58,39 @@ final class EpisodeDetailViewModelTests: XCTestCase {
         await sut.loadData()
 
         XCTAssertNil(sut.error)
+        XCTAssertEqual(sut.episode?.id, 100)
+    }
+
+    func test_trackScreenView_tracksEpisodeDetailWithEpisodeId() {
+        let tracker = TrackerSpy()
+        let sut = EpisodeDetailViewModel(episodeId: 100, useCase: ShowsUseCaseStub(), tracker: tracker)
+
+        sut.trackScreenView()
+
+        XCTAssertEqual(tracker.events, [.screenView(.episodeDetail, itemId: 100)])
+    }
+
+    func test_loadData_failure_tracksLoadFailed() async {
+        let tracker = TrackerSpy()
+        let useCase = ShowsUseCaseStub()
+        useCase.fetchEpisodeByIdResult = .failure(StubError.failure)
+        let sut = EpisodeDetailViewModel(episodeId: 100, useCase: useCase, tracker: tracker)
+
+        await sut.loadData()
+
+        XCTAssertEqual(tracker.events, [.loadFailed(.episodeDetail)])
+    }
+
+    func test_retry_tracksRetryAndReloadsEpisode() async {
+        let tracker = TrackerSpy()
+        let useCase = ShowsUseCaseStub()
+        useCase.fetchEpisodeByIdResult = .success(.fixture(id: 100))
+        let sut = EpisodeDetailViewModel(episodeId: 100, useCase: useCase, tracker: tracker)
+
+        await sut.retry()
+
+        XCTAssertEqual(tracker.events, [.retry(.episodeDetail)])
+        XCTAssertEqual(useCase.requestedEpisodeIds, [100])
         XCTAssertEqual(sut.episode?.id, 100)
     }
 }

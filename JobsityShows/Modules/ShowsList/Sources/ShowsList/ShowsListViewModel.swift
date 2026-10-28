@@ -7,6 +7,7 @@
 
 import Foundation
 import Domain
+import Tracking
 
 @MainActor
 public final class ShowsListViewModel: ObservableObject {
@@ -22,9 +23,11 @@ public final class ShowsListViewModel: ObservableObject {
     private var hasPages: Bool = true
 
     private let useCase: ShowsUseCaseProtocol
+    private let tracker: Tracker
 
-    public init(useCase: ShowsUseCaseProtocol) {
+    public init(useCase: ShowsUseCaseProtocol, tracker: Tracker = TrackerProvider.current) {
         self.useCase = useCase
+        self.tracker = tracker
     }
 
     public func fetchShows(page: Int) async {
@@ -49,6 +52,7 @@ public final class ShowsListViewModel: ObservableObject {
 
             if page == 1 {
                 errorMessage = "Failed to fetch shows: \(error.localizedDescription)"
+                tracker.track(.loadFailed(.showsList))
             }
         }
     }
@@ -90,6 +94,20 @@ public final class ShowsListViewModel: ObservableObject {
         } else {
             return shows[indexPath]
         }
+    }
+
+    public func selectShow(at index: Int) -> Show {
+        let show: Show = getShow(for: index)
+        tracker.track(.selectShow(id: show.id, name: show.name, fromSearch: !searchText.isEmpty))
+        return show
+    }
+
+    public func trackScreenView() {
+        tracker.track(.screenView(.showsList))
+    }
+
+    public func trackSearch(term: String) {
+        tracker.track(.search(term: term))
     }
 
 }

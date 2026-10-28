@@ -7,6 +7,7 @@
 
 import XCTest
 import Domain
+import Tracking
 @testable import ShowsList
 
 @MainActor
@@ -143,8 +144,74 @@ final class ShowsListViewModelTests: XCTestCase {
         XCTAssertEqual(sut.getShow(for: 0).id, 7)
     }
 
-    private func makeSUT() -> (sut: ShowsListViewModel, useCase: ShowsUseCaseStub) {
+    func test_trackScreenView_tracksShowsListScreen() {
+        let tracker = TrackerSpy()
+        let (sut, _) = makeSUT(tracker: tracker)
+
+        sut.trackScreenView()
+
+        XCTAssertEqual(tracker.events, [.screenView(.showsList)])
+    }
+
+    func test_trackSearch_tracksSearchTerm() {
+        let tracker = TrackerSpy()
+        let (sut, _) = makeSUT(tracker: tracker)
+
+        sut.trackSearch(term: "dome")
+
+        XCTAssertEqual(tracker.events, [.search(term: "dome")])
+    }
+
+    func test_fetchShows_firstPageFailure_tracksLoadFailed() async {
+        let tracker = TrackerSpy()
+        let (sut, useCase) = makeSUT(tracker: tracker)
+        useCase.fetchShowsHandler = { _ in throw StubError.failure }
+
+        await sut.fetchShows(page: 1)
+
+        XCTAssertEqual(tracker.events, [.loadFailed(.showsList)])
+    }
+
+    func test_fetchShows_nextPageFailure_doesNotTrack() async {
+        let tracker = TrackerSpy()
+        let (sut, useCase) = makeSUT(tracker: tracker)
+        useCase.fetchShowsHandler = { page in
+            guard page == 1 else { throw StubError.failure }
+            return [.fixture(id: 1)]
+        }
+
+        await sut.fetchShows(page: 1)
+        await sut.fetchShows(page: 2)
+
+        XCTAssertTrue(tracker.events.isEmpty)
+    }
+
+    func test_selectShow_returnsShowAndTracksSelectionFromList() async {
+        let tracker = TrackerSpy()
+        let (sut, useCase) = makeSUT(tracker: tracker)
+        useCase.fetchShowsHandler = { _ in [.fixture(id: 1, name: "Under the Dome")] }
+        await sut.fetchShows(page: 1)
+
+        let show = sut.selectShow(at: 0)
+
+        XCTAssertEqual(show.id, 1)
+        XCTAssertEqual(tracker.events, [.selectShow(id: 1, name: "Under the Dome", fromSearch: false)])
+    }
+
+    func test_selectShow_whileSearching_tracksSelectionFromSearch() async {
+        let tracker = TrackerSpy()
+        let (sut, useCase) = makeSUT(tracker: tracker)
+        useCase.searchShowsHandler = { _ in [.fixture(id: 7, name: "Dome")] }
+        await sut.searchShows(query: "dome")
+        sut.searchText = "dome"
+
+        _ = sut.selectShow(at: 0)
+
+        XCTAssertEqual(tracker.events, [.selectShow(id: 7, name: "Dome", fromSearch: true)])
+    }
+
+    private func makeSUT(tracker: TrackerSpy = TrackerSpy()) -> (sut: ShowsListViewModel, useCase: ShowsUseCaseStub) {
         let useCase = ShowsUseCaseStub()
-        return (ShowsListViewModel(useCase: useCase), useCase)
+        return (ShowsListViewModel(useCase: useCase, tracker: tracker), useCase)
     }
 }

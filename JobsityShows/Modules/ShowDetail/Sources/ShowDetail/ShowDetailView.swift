@@ -25,7 +25,7 @@ public struct ShowDetailView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             } else if let error: ShowDetailError = viewModel.error, error == .showError {
                 ErrorView(error: error) {
-                    Task { await viewModel.loadData() }
+                    Task { await viewModel.retry() }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .padding()
@@ -40,6 +40,7 @@ public struct ShowDetailView: View {
         .navigationTitle(viewModel.show?.name ?? "Show Details")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.visible, for: .navigationBar)
+        .onAppear { viewModel.trackScreenView() }
         .task { await viewModel.loadData() }
     }
 

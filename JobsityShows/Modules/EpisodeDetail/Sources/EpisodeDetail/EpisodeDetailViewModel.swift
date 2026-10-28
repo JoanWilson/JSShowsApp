@@ -8,6 +8,7 @@
 import Foundation
 import Domain
 import Data
+import Tracking
 
 @MainActor
 public final class EpisodeDetailViewModel: ObservableObject {
@@ -18,16 +19,19 @@ public final class EpisodeDetailViewModel: ObservableObject {
 
     private let episodeId: Int
     private let useCase: ShowsUseCaseProtocol
+    private let tracker: Tracker
 
-    public init(episodeId: Int, useCase: ShowsUseCaseProtocol = ShowsRepository()) {
+    public init(episodeId: Int, useCase: ShowsUseCaseProtocol = ShowsRepository(), tracker: Tracker = TrackerProvider.current) {
         self.episodeId = episodeId
         self.useCase = useCase
+        self.tracker = tracker
     }
 
-    public init(episode: Episode, useCase: ShowsUseCaseProtocol = ShowsRepository()) {
+    public init(episode: Episode, useCase: ShowsUseCaseProtocol = ShowsRepository(), tracker: Tracker = TrackerProvider.current) {
         self.episode = episode
         self.episodeId = episode.id
         self.useCase = useCase
+        self.tracker = tracker
     }
 
     public func loadData() async {
@@ -40,9 +44,19 @@ public final class EpisodeDetailViewModel: ObservableObject {
         } catch {
             self.error = error
             print(error.localizedDescription)
+            tracker.track(.loadFailed(.episodeDetail))
         }
 
         isLoading = false
+    }
+
+    public func retry() async {
+        tracker.track(.retry(.episodeDetail))
+        await loadData()
+    }
+
+    public func trackScreenView() {
+        tracker.track(.screenView(.episodeDetail, itemId: episodeId))
     }
 
 }

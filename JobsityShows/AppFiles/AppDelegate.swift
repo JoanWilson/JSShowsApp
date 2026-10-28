@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseTracking
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -14,8 +15,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         #if DEBUG
         if ProcessInfo.processInfo.arguments.contains("-UITests") {
             URLProtocol.registerClass(TVMazeStubURLProtocol.self)
+            return true
         }
         #endif
+        FirebaseTracker.start()
         return true
     }
 
