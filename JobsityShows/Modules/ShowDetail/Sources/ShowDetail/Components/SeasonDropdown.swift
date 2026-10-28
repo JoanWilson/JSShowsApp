@@ -19,15 +19,15 @@ struct SeasonDropdown: View {
                     selectedSeason = season
                 }) {
                     if selectedSeason?.id == season.id {
-                        Label("Season \(season.number)", systemImage: "checkmark")
+                        Label(String(localized: "Season \(season.number)", bundle: .module), systemImage: "checkmark")
                     } else {
-                        Text("Season \(season.number)")
+                        Text("Season \(season.number)", bundle: .module)
                     }
                 }
             }
         } label: {
             HStack {
-                Text("Season \(selectedSeason?.number ?? 1)")
+                Text("Season \(selectedSeason?.number ?? 1)", bundle: .module)
                     .fontWeight(.medium)
                 Image(systemName: "chevron.down")
                     .font(.system(size: 14))

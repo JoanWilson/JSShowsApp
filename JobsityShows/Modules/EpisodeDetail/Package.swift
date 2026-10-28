@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "EpisodeDetail",
+    defaultLocalization: "en",
     platforms: [.iOS(.v16), .macOS(.v13)],
     products: [
         .library(
@@ -29,7 +30,8 @@ let package = Package(
                 .product(name: "Common", package: "Common"),
                 .product(name: "Tracking", package: "Tracking"),
                 .product(name: "Kingfisher", package: "Kingfisher")
-            ]),
+            ],
+            resources: [.process("Resources")]),
         .testTarget(
             name: "EpisodeDetailTests",
             dependencies: [

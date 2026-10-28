@@ -22,7 +22,7 @@ public final class ShowsListViewController: UIViewController, UISearchController
         controller.delegate = self
         controller.searchResultsUpdater = self
         controller.obscuresBackgroundDuringPresentation = false
-        controller.searchBar.placeholder = "Search Shows"
+        controller.searchBar.placeholder = String(localized: "Search Shows", bundle: .module)
         controller.searchBar.delegate = self
         return controller
     }()
@@ -61,7 +61,7 @@ public final class ShowsListViewController: UIViewController, UISearchController
     }
 
     private func setupNavbar() {
-        title = "Shows"
+        title = String(localized: "Shows", bundle: .module)
         navigationItem.largeTitleDisplayMode = .always
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false

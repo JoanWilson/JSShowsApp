@@ -13,7 +13,7 @@ final class ShowsListView: UIView {
     lazy var emptyLabel: UILabel = {
         let label: UILabel = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "No shows avaiable"
+        label.text = String(localized: "No shows available", bundle: .module)
         label.isHidden = true
 
         return label

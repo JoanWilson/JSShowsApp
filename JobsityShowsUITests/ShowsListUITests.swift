@@ -61,7 +61,7 @@ final class ShowsListUITests: XCTestCase {
     func test_serverError_showsEmptyMessage() {
         let app: XCUIApplication = .launchWithStubs(failingPath: "/")
 
-        XCTAssertTrue(app.staticTexts["No shows avaiable"].waitForExistence(timeout: XCUIApplication.timeout))
+        XCTAssertTrue(app.staticTexts["No shows available"].waitForExistence(timeout: XCUIApplication.timeout))
         XCTAssertFalse(app.showCell(named: "Under the Dome").exists)
     }
 

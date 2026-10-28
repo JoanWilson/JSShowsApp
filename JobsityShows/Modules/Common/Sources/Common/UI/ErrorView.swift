@@ -19,10 +19,10 @@ public struct ErrorView: View {
 
     public var body: some View {
         VStack(spacing: 16) {
-            Text("Failed to load show details")
+            Text("Failed to load show details", bundle: .module)
                 .font(.headline)
             
-            Button("Try Again") {
+            Button(String(localized: "Try Again", bundle: .module)) {
                 Task {
                     await retryAction()
                 }

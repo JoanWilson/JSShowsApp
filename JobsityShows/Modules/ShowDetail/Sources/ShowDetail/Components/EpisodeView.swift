@@ -34,7 +34,7 @@ struct EpisodeView: View {
                     .font(.headline)
                     .lineLimit(1)
 
-                Text("S\(episode.season)E\(episode.number)")
+                Text("S\(episode.season)E\(episode.number)", bundle: .module)
                     .font(.caption)
                     .foregroundColor(.secondary)
 
@@ -47,7 +47,7 @@ struct EpisodeView: View {
                 }
 
                 if let runtime = episode.runtime {
-                    Text("\(runtime) min")
+                    Text("\(runtime) min", bundle: .module)
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }

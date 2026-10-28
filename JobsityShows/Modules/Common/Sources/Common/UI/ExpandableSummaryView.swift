@@ -23,7 +23,7 @@ public struct ExpandableSummaryView: View {
     
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Summary")
+            Text("Summary", bundle: .module)
                 .font(.footnote)
                 .foregroundColor(.secondary)
 
@@ -39,7 +39,7 @@ public struct ExpandableSummaryView: View {
 
                 if isTruncated {
                     Button(action: { showFullScreen = true }) {
-                        Text(isExpanded ? "Show Less" : "Show More")
+                        Text(isExpanded ? "Show Less" : "Show More", bundle: .module)
                             .padding(.top, 3)
                             .font(.footnote)
                             .foregroundColor(.accentColor)
@@ -84,11 +84,11 @@ public struct FullSummaryView: View {
                 Text(text)
                     .padding()
             }
-            .navigationTitle("Summary")
+            .navigationTitle(Text("Summary", bundle: .module))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    Button("Done") {
+                    Button(String(localized: "Done", bundle: .module)) {
                         dismiss()
                     }
                 }

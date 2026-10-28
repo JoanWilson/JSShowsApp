@@ -21,7 +21,7 @@ public struct ShowDetailView: View {
     public var body: some View {
         VStack(spacing: 0) {
             if viewModel.isLoading && viewModel.show == nil {
-                ProgressView("Loading...")
+                ProgressView(String(localized: "Loading...", bundle: .module))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             } else if let error: ShowDetailError = viewModel.error, error == .showError {
                 ErrorView(error: error) {
@@ -32,12 +32,12 @@ public struct ShowDetailView: View {
             } else if let show: Show = viewModel.show {
                 showContent(show: show)
             } else {
-                Text("No show data available")
+                Text("No show data available", bundle: .module)
                     .foregroundColor(.secondary)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
-        .navigationTitle(viewModel.show?.name ?? "Show Details")
+        .navigationTitle(viewModel.show?.name ?? String(localized: "Show Details", bundle: .module))
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.visible, for: .navigationBar)
         .onAppear { viewModel.trackScreenView() }
@@ -120,7 +120,7 @@ public struct ShowDetailView: View {
     @ViewBuilder
     private var seasonSelector: some View {
         if let error: ShowDetailError = viewModel.error, error == .seasonError {
-            Text("Season 1")
+            Text("Season \(1)", bundle: .module)
                 .padding(.leading, 16)
         } else {
             VStack {
@@ -152,11 +152,11 @@ public struct ShowDetailView: View {
     @ViewBuilder
     private var episodesList: some View {
         if viewModel.isLoading && !viewModel.episodes.isEmpty {
-            ProgressView("Loading episodes...")
+            ProgressView(String(localized: "Loading episodes...", bundle: .module))
                 .padding()
                 .frame(maxWidth: .infinity)
         } else if let error: ShowDetailError = viewModel.error, error == .episodesError {
-            Text("No episodes available for this season")
+            Text("No episodes available for this season", bundle: .module)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
                 .padding()

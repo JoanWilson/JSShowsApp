@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "Common",
+    defaultLocalization: "en",
     platforms: [.iOS(.v16), .macOS(.v13)],
     products: [
         .library(
@@ -19,6 +20,7 @@ let package = Package(
             name: "Common",
             dependencies: [
                 .product(name: "Extensions", package: "Extensions")
-            ]),
+            ],
+            resources: [.process("Resources")]),
     ]
 )
