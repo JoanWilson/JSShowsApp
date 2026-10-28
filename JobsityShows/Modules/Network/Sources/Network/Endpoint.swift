@@ -17,13 +17,13 @@ public protocol Endpoint {
 extension Endpoint {
     public func makeRequest() throws -> URLRequest {
         guard var components = URLComponents(string: baseURL + path) else {
-            throw URLError(.badURL)
+            throw NetworkError.invalidURL
         }
 
         components.queryItems = queryItems
 
         guard let url = components.url else {
-            throw URLError(.badURL)
+            throw NetworkError.invalidURL
         }
 
         var request = URLRequest(url: url)

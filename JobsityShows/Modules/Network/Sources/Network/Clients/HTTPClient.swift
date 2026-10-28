@@ -18,7 +18,7 @@ public final class HTTPClient: Client {
         let request = try endpoint.makeRequest()
 
         do {
-            let (data, response) = try await URLSession.shared.data(for: request)
+            let (data, response) = try await session.data(for: request)
 
             guard let httpResponse = response as? HTTPURLResponse else {
                 throw NetworkError.invalidResponse
@@ -38,6 +38,8 @@ public final class HTTPClient: Client {
                 throw NetworkError.decodingError(error)
             }
 
+        } catch let error as NetworkError {
+            throw error
         } catch {
             throw NetworkError.underlying(error)
         }
@@ -47,7 +49,7 @@ public final class HTTPClient: Client {
         let request = try endpoint.makeRequest()
 
         do {
-            let (_, response) = try await URLSession.shared.data(for: request)
+            let (_, response) = try await session.data(for: request)
 
             guard let httpResponse = response as? HTTPURLResponse else {
                 throw NetworkError.invalidResponse
@@ -57,6 +59,8 @@ public final class HTTPClient: Client {
                 throw NetworkError.statusCode(httpResponse.statusCode)
             }
 
+        } catch let error as NetworkError {
+            throw error
         } catch {
             throw NetworkError.underlying(error)
         }
