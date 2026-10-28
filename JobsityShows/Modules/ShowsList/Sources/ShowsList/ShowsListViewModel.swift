@@ -29,8 +29,9 @@ public final class ShowsListViewModel: ObservableObject {
 
     public func fetchShows(page: Int) async {
         guard !Task.isCancelled, hasPages else { return }
+        isFetching = true
+        defer { isFetching = false }
         do {
-            isFetching = true
             let result: [Show] = try await useCase.fetchShows(page: page)
             if page == 1 {
                 self.shows = result
@@ -64,6 +65,7 @@ public final class ShowsListViewModel: ObservableObject {
     public func searchShows(query: String) async {
         guard !Task.isCancelled else { return }
         isFetching = true
+        defer { isFetching = false }
         do {
             let results = try await useCase.searchShows(query: query)
             self.searchResultShows = results
