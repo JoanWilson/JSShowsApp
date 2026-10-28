@@ -1,0 +1,111 @@
+default_platform(:ios)
+skip_docs
+
+ROOT = File.expand_path("..", __dir__)
+PROJECT = File.join(ROOT, "JobsityShows.xcodeproj")
+MODULES_DIR = File.join(ROOT, "JobsityShows/Modules")
+APP_SCHEME = "JobsityShows"
+BUNDLE_ID = "com.joanwilson.JobsityShows"
+DEVICE = ENV.fetch("DEVICE", "iPhone 17 Pro")
+APP_DERIVED_DATA = File.join(ROOT, "build/DerivedData/App")
+MODULES_DERIVED_DATA = File.join(ROOT, "build/DerivedData/Modules")
+TEST_OUTPUT = File.join(ROOT, "fastlane/test_output")
+
+platform :ios do
+  desc "Build the app and run it on the simulator"
+  lane :run_app do
+    udid = simulator_udid
+    sh("xcrun", "simctl", "bootstatus", udid, "-b")
+    sh("open", "-a", "Simulator")
+    sh("xcodebuild", "build", "-quiet",
+       "-project", PROJECT,
+       "-scheme", APP_SCHEME,
+       "-destination", destination(udid),
+       "-derivedDataPath", APP_DERIVED_DATA)
+    sh("xcrun", "simctl", "install", udid, File.join(APP_DERIVED_DATA, "Build/Products/Debug-iphonesimulator/JobsityShows.app"))
+    sh("xcrun", "simctl", "launch", "--terminate-running-process", udid, BUNDLE_ID)
+  end
+
+  desc "Build a single module: fastlane build_module module:ShowsList"
+  lane :build_module do |options|
+    name = module_name(options, modules)
+    Dir.chdir(File.join(MODULES_DIR, name)) do
+      sh("xcodebuild", "build", "-quiet",
+         "-scheme", name,
+         "-destination", destination(simulator_udid),
+         "-derivedDataPath", MODULES_DERIVED_DATA)
+    end
+  end
+
+  desc "Run the unit tests of every module and the UI tests"
+  lane :test_all do
+    unit_tests
+    ui_tests
+  end
+
+  desc "Run the unit tests of every module"
+  lane :unit_tests do
+    tested_modules.each { |name| test_package(name) }
+  end
+
+  desc "Run the UI tests"
+  lane :ui_tests do
+    scan(
+      project: PROJECT,
+      scheme: APP_SCHEME,
+      destination: destination(simulator_udid),
+      skip_detect_devices: true,
+      only_testing: ["JobsityShowsUITests"],
+      derived_data_path: APP_DERIVED_DATA,
+      output_directory: File.join(TEST_OUTPUT, "UITests"),
+      xcargs: "-parallel-testing-enabled NO"
+    )
+  end
+
+  desc "Run the unit tests of a single module: fastlane test_module module:Data"
+  lane :test_module do |options|
+    test_package(module_name(options, tested_modules))
+  end
+end
+
+def test_package(name)
+  scan(
+    package_path: File.join(MODULES_DIR, name),
+    scheme: name,
+    destination: destination(simulator_udid),
+    skip_detect_devices: true,
+    derived_data_path: MODULES_DERIVED_DATA,
+    output_directory: File.join(TEST_OUTPUT, name),
+    xcargs: "-parallel-testing-enabled NO"
+  )
+end
+
+def modules
+  Dir.children(MODULES_DIR)
+     .select { |name| File.exist?(File.join(MODULES_DIR, name, "Package.swift")) }
+     .sort
+end
+
+def tested_modules
+  modules.select { |name| File.read(File.join(MODULES_DIR, name, "Package.swift")).include?(".testTarget") }
+end
+
+def module_name(options, available)
+  name = options[:module]
+  UI.user_error!("Missing module. Use module:<#{available.join('|')}>") if name.nil?
+  UI.user_error!("Unknown module '#{name}'. Available: #{available.join(', ')}") unless available.include?(name)
+  name
+end
+
+def simulator_udid
+  @simulator_udid ||= begin
+    output = sh("xcrun", "simctl", "list", "devices", "available", "--json", log: false)
+    devices = JSON.parse(output)["devices"].values.flatten.select { |device| device["name"] == DEVICE }
+    UI.user_error!("Simulator '#{DEVICE}' not found") if devices.empty?
+    (devices.find { |device| device["state"] == "Booted" } || devices.first)["udid"]
+  end
+end
+
+def destination(udid)
+  "platform=iOS Simulator,id=#{udid}"
+end

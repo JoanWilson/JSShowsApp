@@ -69,19 +69,20 @@ The project uses the following dependencies:
 - URLSession for networking
 - CoreData for data persistence
 
-## Tests
+## Fastlane
 
-Each module under `JobsityShows/Modules` has its own XCTest target.
+Install it with `brew install fastlane`, then run the lanes from the project root:
 
-- `Extensions`, `Networking` and `Data` run on macOS:
-  ```bash
-  swift test --package-path JobsityShows/Modules/Data
-  ```
-- `ShowsList`, `ShowDetail` and `EpisodeDetail` import UIKit/SwiftUI, so they run on the iOS Simulator:
-  ```bash
-  cd JobsityShows/Modules/ShowsList
-  xcodebuild test -scheme ShowsList -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
-  ```
+| Lane | What it does |
+|------|--------------|
+| `fastlane run_app` | Builds the app and opens it on the simulator |
+| `fastlane build_module module:ShowsList` | Builds a single module |
+| `fastlane test_all` | Runs every unit test and the UI tests |
+| `fastlane unit_tests` | Runs the unit tests of every module |
+| `fastlane ui_tests` | Runs the UI tests |
+| `fastlane test_module module:Data` | Runs the unit tests of a single module |
+
+Lanes use the `iPhone 17 Pro` simulator by default. To pick another one: `DEVICE="iPhone 16" fastlane ui_tests`.
 
 ## Future Enhancements
 
