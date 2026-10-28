@@ -8,6 +8,7 @@
 import Foundation
 import Domain
 import Tracking
+import Reachability
 
 @MainActor
 public final class ShowsListViewModel: ObservableObject {
@@ -19,15 +20,20 @@ public final class ShowsListViewModel: ObservableObject {
     @Published private(set) var searchResultShows: [Show] = []
     @Published private(set) var errorMessage: String?
     @Published private(set) var currentPage: Int = 1
+    @Published private(set) var isOffline: Bool = false
 
     private var hasPages: Bool = true
 
     private let useCase: ShowsUseCaseProtocol
     private let tracker: Tracker
+    private let connectionMonitor: ConnectionMonitoring
 
-    public init(useCase: ShowsUseCaseProtocol, tracker: Tracker = TrackerProvider.current) {
+    public init(useCase: ShowsUseCaseProtocol,
+                tracker: Tracker = TrackerProvider.current,
+                connectionMonitor: ConnectionMonitoring = ConnectionMonitor.shared) {
         self.useCase = useCase
         self.tracker = tracker
+        self.connectionMonitor = connectionMonitor
     }
 
     public func fetchShows(page: Int) async {
@@ -78,6 +84,26 @@ public final class ShowsListViewModel: ObservableObject {
             errorMessage = "Failed to search shows: \(error.localizedDescription)"
             self.searchResultShows = []
         }
+    }
+
+    public func startMonitoringConnection() {
+        connectionMonitor.statusDidChange = { [weak self] status in
+            MainActor.assumeIsolated {
+                self?.handleConnection(status)
+            }
+        }
+        connectionMonitor.start()
+    }
+
+    func handleConnection(_ status: ConnectionStatus) {
+        let wasOffline: Bool = isOffline
+        isOffline = status == .disconnected
+        guard wasOffline != isOffline else { return }
+
+        tracker.track(.connectionChanged(isConnected: !isOffline))
+
+        guard wasOffline, shows.isEmpty else { return }
+        Task { await refreshShows() }
     }
 
     public func numberOfItems() -> Int {

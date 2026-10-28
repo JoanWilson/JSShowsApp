@@ -47,6 +47,7 @@ public final class ShowsListViewController: UIViewController, UISearchController
         showsBinding()
         setupSearchController()
         loadInitialShows()
+        viewModel.startMonitoringConnection()
     }
 
     public override func viewDidAppear(_ animated: Bool) {
@@ -104,6 +105,16 @@ public final class ShowsListViewController: UIViewController, UISearchController
                 contentView.showsCollectionView.isHidden = hasError
                 contentView.emptyLabel.isHidden = !hasError
                 viewModel.isFetching = false
+            }
+            .store(in: &cancellables)
+
+        viewModel.$isOffline
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isOffline in
+                guard let self: ShowsListViewController else { return }
+                UIView.animate(withDuration: 0.25) {
+                    self.contentView.offlineBanner.isHidden = !isOffline
+                }
             }
             .store(in: &cancellables)
     }
