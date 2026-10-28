@@ -82,4 +82,9 @@ final class TrackingEventTests: XCTestCase {
             XCTAssertLessThanOrEqual(event.parameters.count, 25, event.name)
         }
     }
+
+    func test_connectionChanged_usesStatusAsName() {
+        XCTAssertEqual(TrackingEvent.connectionChanged(isConnected: false), TrackingEvent(name: "connection_lost"))
+        XCTAssertEqual(TrackingEvent.connectionChanged(isConnected: true), TrackingEvent(name: "connection_restored"))
+    }
 }

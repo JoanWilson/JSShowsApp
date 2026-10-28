@@ -55,4 +55,8 @@ public extension TrackingEvent {
     static func retry(_ screen: TrackingScreen) -> TrackingEvent {
         TrackingEvent(name: "retry", parameters: ["screen_name": screen.rawValue])
     }
+
+    static func connectionChanged(isConnected: Bool) -> TrackingEvent {
+        TrackingEvent(name: isConnected ? "connection_restored" : "connection_lost")
+    }
 }
