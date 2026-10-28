@@ -7,6 +7,7 @@
 
 import Foundation
 import Domain
+import Extensions
 
 public struct ShowDTO: Decodable {
     public let id: Int
@@ -31,9 +32,7 @@ public struct ShowDTO: Decodable {
              genres: genres,
              schedule: Show.Schedule(time: schedule.time,
                                      days: schedule.days),
-             image: image.map {
-            Show.Image(medium: $0.medium, original: $0.original)
-        },
+             image: image?.toDomain(),
              summary: summary?.removingHTMLTags()
         )
     }
@@ -62,7 +61,7 @@ extension ShowDTO {
         }
 
         public func toDomain() -> Show.Image {
-            Show.Image(medium: medium, original: original)
+            Show.Image(medium: medium.usingHTTPS(), original: original.usingHTTPS())
         }
     }
 }

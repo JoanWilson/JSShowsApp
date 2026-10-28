@@ -7,7 +7,7 @@
 
 import Foundation
 import Domain
-import Network
+import Networking
 
 public final class ShowsRepository: ShowsUseCaseProtocol {
 
@@ -19,12 +19,14 @@ public final class ShowsRepository: ShowsUseCaseProtocol {
 
     public func fetchShows(page: Int) async throws -> [Show] {
         let endpoint = TVMazeEndpoint.shows(page: page)
-        return try await client.request(endpoint)
+        let shows: [ShowDTO] = try await client.request(endpoint)
+        return shows.map { $0.toDomain() }
     }
 
     public func fetchShowById(id: Int) async throws -> Show {
         let endpoint = TVMazeEndpoint.show(id: id)
-        return try await client.request(endpoint)
+        let show: ShowDTO = try await client.request(endpoint)
+        return show.toDomain()
     }
 
     public func searchShows(query: String) async throws -> [Show] {

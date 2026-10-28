@@ -41,6 +41,7 @@ public final class ShowDetailViewModel: ObservableObject {
 
     public func loadData() async {
         await fetchShow()
+        guard show != nil else { return }
         let firstSeason: Season? = await fetchSeasons()
         await fetchEpisodes(for: firstSeason)
     }
@@ -63,6 +64,7 @@ public final class ShowDetailViewModel: ObservableObject {
     public func fetchSeasons() async -> Season? {
         isLoading = true
         error = nil
+        defer { isLoading = false }
 
         do {
             let fetchedSeasons: [Season] = try await useCase.fetchSeasons(showId: showId)
@@ -74,7 +76,6 @@ public final class ShowDetailViewModel: ObservableObject {
             print(error.localizedDescription)
         }
 
-        isLoading = false
         return nil
     }
 

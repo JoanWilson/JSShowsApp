@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Network
+import Networking
 
 public enum TVMazeEndpoint {
     case show(id: Int)

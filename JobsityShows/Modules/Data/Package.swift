@@ -14,7 +14,7 @@ let package = Package(
     dependencies: [
         .package(name: "Domain", path: "../Domain"),
         .package(name: "Extensions", path: "../Extensions"),
-        .package(name: "Network", path: "../Network")
+        .package(name: "Networking", path: "../Networking")
     ],
     targets: [
         .target(
@@ -22,12 +22,16 @@ let package = Package(
             dependencies: [
                 .product(name: "Domain", package: "Domain"),
                 .product(name: "Extensions", package: "Extensions"),
-                .product(name: "Network", package: "Network")
+                .product(name: "Networking", package: "Networking")
             ]
         ),
         .testTarget(
             name: "DataTests",
-            dependencies: ["Data"]
+            dependencies: [
+                "Data",
+                .product(name: "Domain", package: "Domain"),
+                .product(name: "Networking", package: "Networking")
+            ]
         ),
     ]
 )
