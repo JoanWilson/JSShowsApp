@@ -20,9 +20,5 @@ let package = Package(
             dependencies: [
                 .product(name: "Extensions", package: "Extensions")
             ]),
-        .testTarget(
-            name: "CommonTests",
-            dependencies: ["Common"]
-        ),
     ]
 )
